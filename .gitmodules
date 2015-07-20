@@ -1,0 +1,3 @@
+[submodule "spiro"]
+	path = spiro
+	url = https://github.com/nicu-chiciuc/spiro
