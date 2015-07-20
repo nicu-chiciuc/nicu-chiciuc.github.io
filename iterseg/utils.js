@@ -64,7 +64,7 @@ Utils = {
       points: Utils.arrXYToStr(arr)
     });
   },
-  getClosest: function(mid, left, right) {
+  closest: function(mid, left, right) {
     if (Math.abs(mid - left) < Math.abs(mid - right)) {
       return left;
     } else {
@@ -203,18 +203,6 @@ Utils = {
     v.ang = Math.random() * Math.PI * 2;
     v.rad = Math.random();
     return v;
-  },
-  radToDegree: function(rad) {
-    return rad * 180 / Math.PI;
-  },
-  degreeToRad: function(degree) {
-    return degree * Math.PI / 180;
-  },
-  getDegree0To360: function(degree) {
-    while (degree < 0) {
-      degree += 360;
-    }
-    return degree % 360;
   }
 };
 
@@ -275,7 +263,6 @@ Vector = (function() {
 
   Vector.prototype.show = function() {
     console.log(this.orthX + ' ' + this.orthY);
-    return this;
   };
 
   Vector.prototype.getSimpleOrtho = function() {
@@ -294,14 +281,12 @@ Vector = (function() {
 
   Vector.prototype.recalcOrtho = function() {
     this.orthX = Math.cos(this.polarAng) * this.polarRad;
-    this.orthY = Math.sin(this.polarAng) * this.polarRad;
-    return this;
+    return this.orthY = Math.sin(this.polarAng) * this.polarRad;
   };
 
   Vector.prototype.recalcPolar = function() {
     this.polarRad = Math.sqrt(this.orthX * this.orthX + this.orthY * this.orthY);
-    this.polarAng = Math.atan2(this.orthY, this.orthX);
-    return this;
+    return this.polarAng = Math.atan2(this.orthY, this.orthX);
   };
 
   Vector.prototype.rotate = function(nang, nx, ny) {
@@ -311,14 +296,6 @@ Vector = (function() {
     this.orthX = nx + (oldx - nx) * Math.cos(nang) - (oldy - ny) * Math.sin(nang);
     this.orthY = ny + (oldx - nx) * Math.sin(nang) + (oldy - ny) * Math.cos(nang);
     this.recalcPolar();
-    return this;
-  };
-
-  Vector.prototype.translate = function(nx, ny) {
-    this.orthX += nx;
-    this.orthY += ny;
-    this.recalcPolar();
-    return this;
   };
 
   Vector.prototype.setOrtho = function(x, y) {
@@ -330,14 +307,12 @@ Vector = (function() {
       this.orthY = y || 0;
     }
     this.recalcPolar();
-    return this;
   };
 
   Vector.prototype.setPolar = function(rad, ang) {
     this.polarRad = rad || 0;
     this.polarAng = ang || 0;
-    this.recalcOrtho();
-    return this;
+    return this.recalcOrtho();
   };
 
   return Vector;
