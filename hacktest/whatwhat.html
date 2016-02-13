@@ -63,12 +63,14 @@
 
 			tracking.ColorTracker.registerColor('mypink', function(r, g, b) {
 				var threshold = 50,
-				dx = r - 255,
-				dy = g - 50,
-				dz = b - 255;
+					dx = r - 255,
+					dy = g - 50,
+					dz = b - 255;
+				
 				if ((r - g) >= threshold && (b - g) >= threshold) {
 					return true;
 				}
+
 				return dx * dx + dy * dy + dz * dz < 19600;
 			});
 
