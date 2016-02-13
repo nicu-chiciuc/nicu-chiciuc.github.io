@@ -172,126 +172,131 @@ var Drop = (function() {
 		return ' a' + rx +',' + ry + ' ' + xAxisRotate + ' ' + LargeArcFlag + ' ' + SweepFlag + ' ' + x + ',' + y + ' '
 	}
 
-	function svg_arcToSet(SweepFlag, x, y) {
-		return svg_arcTo(rad, rad, 1, 0, SweepFlag, x, y)
-	}
-
 	function svg_lineTo (x, y) {
 		return ' l' + x + ',' + y + ' '
 	}
 
+	var width = window.innerWidth
+	var height = window.innerHeight - 4
 
-	var draw = SVG('drawing').size(800, 600)
+	var draw = SVG('drawing').size(width, height)
 
-	var rows = 5
-	var cols = 8
+	drawDroplets()
 
-	var dropLogic = new DropLogic(rows, cols)
-	
-	var rad = 40
-	var offsetX = 100
-	var offsetY = 100
+	function drawDroplets () {
+		var rows = 2
+		var cols = 3
 
-	for (var i=0; i<rows; i++)
-		for (var j = 0; j < cols; j++) {
-			var path = infoToPath(
-				offsetX + rad*2*j, offsetY + rad*2*i, rad,
-				dropLogic.getAt(i, j)
-				)
+		var dropLogic = new DropLogic(rows, cols)
+		
+		var rad = width / ((cols-1) * 2)
+		var offsetX = 0
+		var offsetY = 0
 
-			draw.path(path).attr({ 
-				fill: getRandomColor(), 
-				'fill-opacity': 0.9,
-				stroke: '#222',
-				'stoke-width': 4
-			})
+		for (var i=0; i<rows; i++)
+			for (var j = 0; j < cols; j++) {
+				var path = infoToPath(
+					offsetX + rad*2*j, offsetY + rad*2*i, rad,
+					dropLogic.getAt(i, j)
+					)
+
+				draw.path(path).attr({ 
+					fill: getRandomColor(), 
+					'fill-opacity': 0.9,
+					stroke: '#222',
+					'stoke-width': 4
+				})
+			}
+
+		function svg_arcToSet(SweepFlag, x, y) {
+			return svg_arcTo(rad, rad, 1, 0, SweepFlag, x, y)
 		}
 
-	function infoToPath (offsetX, offsetY, rad, info) {
-		var xrad = rad, yrad = rad
+		function infoToPath (offsetX, offsetY, rad, info) {
+			var xrad = rad, yrad = rad
 
-		var path = 'M ' + offsetX + ' ' + (offsetY - rad) 
+			var path = 'M ' + offsetX + ' ' + (offsetY - rad) 
 
-		switch (info[0]) {
-			case '_':
-				path += svg_arcToSet(1, xrad, yrad)
-				break
+			switch (info[0]) {
+				case '_':
+					path += svg_arcToSet(1, xrad, yrad)
+					break
 
-			case 'v':
-				path += 
-					svg_arcToSet(0, xrad, -yrad) +
-					svg_lineTo(0, 2 * yrad)
-				break
+				case 'v':
+					path += 
+						svg_arcToSet(0, xrad, -yrad) +
+						svg_lineTo(0, 2 * yrad)
+					break
 
-			case 'h':
-				path +=
-					svg_lineTo(2*xrad, 0) +
-					svg_arcToSet(0, -xrad, yrad)
+				case 'h':
+					path +=
+						svg_lineTo(2*xrad, 0) +
+						svg_arcToSet(0, -xrad, yrad)
+			}
+
+			switch (info[1]) {
+				case '_':
+					path += svg_arcToSet(1, -xrad, yrad)
+					break
+
+				case 'v':
+					path +=
+						svg_lineTo(0, 2*yrad) +
+						svg_arcToSet(0, -xrad, -yrad)
+					break
+
+				case 'h':
+					path +=
+						svg_arcToSet(0, xrad, yrad) +
+						svg_lineTo(-2*xrad, 0)
+			}
+
+			switch (info[2]) {
+				case '_':
+					path += svg_arcToSet(1, -rad, -rad)
+					break
+
+				case 'v':
+					path +=
+						svg_arcToSet(0, -rad, rad) +
+						svg_lineTo(0, -2*rad)
+					break
+
+				case 'h':
+					path +=
+						svg_lineTo(-2*xrad, 0) +
+						svg_arcToSet(0, rad, -rad)
+					break	
+			}
+
+			switch (info[3]) {
+				case '_':
+					path += svg_arcToSet(1, rad, -rad)
+					break
+
+				case 'v':
+					path +=
+						svg_lineTo(0, -2*rad) +
+						svg_arcToSet(0, rad, rad)
+					break
+
+				case 'h':
+					path +=
+						svg_arcToSet(0, -rad, -rad) +
+						svg_lineTo(2*rad, 0)
+					break
+			}
+
+			return path
 		}
-
-		switch (info[1]) {
-			case '_':
-				path += svg_arcToSet(1, -xrad, yrad)
-				break
-
-			case 'v':
-				path +=
-					svg_lineTo(0, 2*yrad) +
-					svg_arcToSet(0, -xrad, -yrad)
-				break
-
-			case 'h':
-				path +=
-					svg_arcToSet(0, xrad, yrad) +
-					svg_lineTo(-2*xrad, 0)
-		}
-
-		switch (info[2]) {
-			case '_':
-				path += svg_arcToSet(1, -rad, -rad)
-				break
-
-			case 'v':
-				path +=
-					svg_arcToSet(0, -rad, rad) +
-					svg_lineTo(0, -2*rad)
-				break
-
-			case 'h':
-				path +=
-					svg_lineTo(-2*xrad, 0) +
-					svg_arcToSet(0, rad, -rad)
-				break	
-		}
-
-		switch (info[3]) {
-			case '_':
-				path += svg_arcToSet(1, rad, -rad)
-				break
-
-			case 'v':
-				path +=
-					svg_lineTo(0, -2*rad) +
-					svg_arcToSet(0, rad, rad)
-				break
-
-			case 'h':
-				path +=
-					svg_arcToSet(0, -rad, -rad) +
-					svg_lineTo(2*rad, 0)
-				break
-		}
-
-		return path
 	}
 
-
-	function randByte () {
+	function getRandByte () {
 		return Math.floor(Math.random() * 256)
 	}
 
 	function getRandomColor () {
-		return 'rgb(' + randByte() + ',' + randByte() + ',' + randByte() + ')'
+		return 'rgb(' + getRandByte() + ',' + getRandByte() + ',' + getRandByte() + ')'
 	}
 	
 	
