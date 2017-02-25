@@ -3724,7 +3724,7 @@ var DrawMethodSingle = function () {
 		_classCallCheck(this, DrawMethodSingle);
 
 		this.magicCanvas = document.createElement('canvas');
-		document.body.appendChild(this.magicCanvas);
+		// document.body.appendChild(this.magicCanvas)
 	}
 
 	_createClass(DrawMethodSingle, [{
@@ -3803,7 +3803,7 @@ var DrawMethodFull = function () {
 
 		this.magicCanvas = document.createElement('canvas');
 		this.mag = this.magicCanvas.getContext('2d');
-		document.body.appendChild(this.magicCanvas);
+		// document.body.appendChild(this.magicCanvas)
 
 		this.setSize(width, height);
 	}
